@@ -1,0 +1,116 @@
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    background:transparent;
+}
+
+body {
+    font-family: 游ゴシック体, 'Yu Gothic', YuGothic, 'ヒラギノ角ゴシック Pro', 'Hiragino Kaku Gothic Pro', メイリオ, Meiryo, Osaka, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
+
+}
+figure {
+    display: block;
+}
+a {
+    text-decoration: none;
+    color: #000000;
+}
+li {
+    list-style: none;
+}
+
+.main {
+    width: 80%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 20px;
+    margin: 0 auto;
+}
+
+.itemList {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+}
+
+.itemList li {
+    padding: 5px;
+}
+
+.itemList li figure {
+    width: 360px;
+}
+
+.itemList li figure img {
+    width: 100%;
+}
+
+@media screen and (max-width: 1000px){
+    .itemList {
+        /*-webkit-flex-direction: column;*/
+        /*flex-direction: column;*/
+    }
+}
+
+.modalSelectButtons {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    flex: 1;
+    -webkit-flex: 1;
+    justify-content: space-around;
+    -webkit-justify-content: space-around;
+}
+
+.modalSelectButtons li {
+    flex-grow: 1;
+    -webkit-flex-grow: 1;
+}
+
+.modalSelectButtons li p {
+    padding-bottom: 8px;
+    cursor: pointer;
+    text-align: center;
+    color: #8c8c8c;
+}
+
+.modalSelectButtons li p:hover {
+    color: #000;
+    font-weight: bold;
+}
+
+.modalTitle {
+    margin: 20px 20px 0 20px;
+}
+
+.modalDescription {
+    margin: 0 20px;
+}
+
+h2.modalDescription {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.modalImage {
+    display: block;
+    margin: 10px auto;
+}
