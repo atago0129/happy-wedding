@@ -4,9 +4,6 @@ var uglify = require("gulp-uglify");
 var browserify = require('browserify');
 var babelify = require('babelify');
 var source = require('vinyl-source-stream');
-var rename = require('gulp-rename');
-var wait = require('gulp-wait');
-var rimraf = require('rimraf');
 
 gulp.task('list-dev', function() {
     return browserify('./jsx/list.jsx', {debug: true})
