@@ -4,6 +4,7 @@ var uglify = require("gulp-uglify");
 var browserify = require('browserify');
 var babelify = require('babelify');
 var source = require('vinyl-source-stream');
+var rename = require('gulp-rename');
 
 gulp.task('list-dev', function() {
     return browserify('./jsx/list.jsx', {debug: true})
@@ -18,7 +19,10 @@ gulp.task('list-dev', function() {
             return gulp.src(["./dest/list.js"])
                 .pipe(plumber())
                 .pipe(uglify({mangle: false}))
-                .pipe(gulp.dest("./public/js/list.min.js"))
+                .pipe(rename({
+                    extname: '.min.js'
+                }))
+                .pipe(gulp.dest("./public/js/"))
         })
 });
 
