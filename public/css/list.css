@@ -1,0 +1,72 @@
+.itemList {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+}
+
+.itemList li {
+    padding: 5px;
+}
+
+.itemList li figure {
+    width: 360px;
+}
+
+.itemList li figure img {
+    width: 100%;
+}
+
+@media screen and (max-width: 1000px){
+    .itemList {
+        /*-webkit-flex-direction: column;*/
+        /*flex-direction: column;*/
+    }
+}
+
+.modalSelectButtons {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    flex: 1;
+    -webkit-flex: 1;
+    justify-content: space-around;
+    -webkit-justify-content: space-around;
+}
+
+.modalSelectButtons li {
+    flex-grow: 1;
+    -webkit-flex-grow: 1;
+}
+
+.modalSelectButtons li p {
+    padding-bottom: 8px;
+    cursor: pointer;
+    text-align: center;
+    color: #8c8c8c;
+}
+
+.modalSelectButtons li p:hover {
+    color: #000;
+    font-weight: bold;
+}
+
+.modalTitle {
+    margin: 20px 20px 0 20px;
+}
+
+.modalDescription {
+    margin: 0 20px;
+}
+
+h2.modalDescription {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.modalImage {
+    display: block;
+    margin: 10px auto;
+}
