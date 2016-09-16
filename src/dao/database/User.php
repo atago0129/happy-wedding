@@ -19,7 +19,7 @@ class User extends Database
 
 		$stmt->execute();
 
-		return new \acolish\entity\User($stmt->fetch(\PDO::FETCH_ASSOC));
+		return $stmt->fetch(\PDO::FETCH_ASSOC);
 	}
 
 	public function insert($id, $name, $type)
