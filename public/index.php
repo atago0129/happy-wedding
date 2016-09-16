@@ -15,9 +15,11 @@ $container['renderer'] = function ($c) {
 
 $app->get('/{id}', function(\Slim\Http\Request $request, $response) {
 	$id = $request->getAttribute('id');
+	$user = (new \acolish\model\User())->getUserById($id);
+
 	/** @var \Slim\Views\PhpRenderer $renderer */
 	$renderer = $this->renderer;
-	return $renderer->render($response, 'test.html', ['id' => $id]);
+	return $renderer->render($response, 'test.html', ['name' => $user->getName()]);
 });
 
 $app->run();
