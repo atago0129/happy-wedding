@@ -28,7 +28,7 @@ abstract class Database
 
 	protected function getPDO()
 	{
-		$pdo = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->name . ';charset=utf-8', $this->user, $this->password);
+		$pdo = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->name . ';charset=utf8', $this->user, $this->password);
 		$pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
 		return $pdo;
 	}
