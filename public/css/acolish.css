@@ -68,5 +68,58 @@ li {
 }
 
 li.big {
-    font-size: 16pt;
+    font-size: 140%;
+}
+
+li.guestName {
+    font-size: 160%;
+}
+
+.rsvp {
+    text-align: center;
+    margin: 20px;
+}
+
+.rsvpButton {
+    font-size: 120%;
+    font-weight: bold;
+    padding: 10px 30px;
+    border-radius: 10px;
+    background-color: #6c8844;
+    color: #fdf4e0;
+    cursor: pointer;
+    border: 0;
+}
+
+.rsvpButton:hover {
+    background-color: #4e6d36;
+}
+
+.rsvpSelector {
+    padding: 30px;
+}
+
+.rsvpSelector li {
+    margin: 0 50px;
+}
+
+.rsvpPart {
+    font-size: 300%;
+    color: #b2851d;
+    cursor: pointer;
+}
+
+.rsvpPart:hover {
+    color: #96441c;
+    font-weight:bold;
+}
+
+.rsvpNonPart {
+    font-size: 200%;
+    color: #555555;
+    cursor: pointer;
+}
+
+.rsvpNonPart:hover {
+    color: #b7b7b7;
 }
