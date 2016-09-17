@@ -3,6 +3,8 @@
     display: -webkit-flex;
     flex-wrap: wrap;
     -webkit-flex-wrap: wrap;
+    -webkit-justify-content: space-around;
+    justify-content: space-around;
 }
 
 .itemList li {
@@ -17,12 +19,12 @@
     width: 100%;
 }
 
-@media screen and (max-width: 1000px){
-    .itemList {
-        /*-webkit-flex-direction: column;*/
-        /*flex-direction: column;*/
-    }
-}
+/*@media screen and (max-width: 1388px){*/
+    /*.itemList {*/
+        /*justify-content: center;*/
+        /*-webkit-justify-content: center;*/
+    /*}*/
+/*}*/
 
 .modalSelectButtons {
     display: flex;

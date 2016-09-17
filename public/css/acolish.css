@@ -20,7 +20,7 @@ time, mark, audio, video {
 
 body {
     font-family: 游ゴシック体, 'Yu Gothic', YuGothic, 'ヒラギノ角ゴシック Pro', 'Hiragino Kaku Gothic Pro', メイリオ, Meiryo, Osaka, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
-
+    background-color: #d8d0b2;
 }
 figure {
     display: block;
@@ -40,7 +40,6 @@ li {
     right: 0;
     top: 20px;
     margin: 0 auto;
-    background-color: #d8d0b2;
 }
 
 .content {
@@ -66,4 +65,8 @@ li {
     background-color: #a2c46b;
     border-radius: 50px;
     min-width: 600px;
+}
+
+li.big {
+    font-size: 16pt;
 }

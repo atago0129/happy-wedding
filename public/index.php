@@ -13,13 +13,29 @@ $container['renderer'] = function ($c) {
 	return new Slim\Views\PhpRenderer($settings['template_path']);
 };
 
+$container['notFoundHandler'] = function ($c) {
+    return function ($request, $response) use ($c) {
+        return $c['renderer']->render($response, '404.html', []);
+    };
+};
+
+$app->get('/list_test', function(\Slim\Http\Request $request, $response) {
+    /** @var \Slim\Views\PhpRenderer $renderer */
+    $renderer = $this->renderer;
+    return $renderer->render($response, 'index.html', []);
+});
+
 $app->get('/{id}', function(\Slim\Http\Request $request, $response) {
 	$id = $request->getAttribute('id');
 	$user = (new \acolish\model\User())->getUserById($id);
 
+    if ($user === null) {
+        throw new \Slim\Exception\NotFoundException($request, $response);
+    }
+
 	/** @var \Slim\Views\PhpRenderer $renderer */
 	$renderer = $this->renderer;
-	return $renderer->render($response, 'test.html', ['name' => $user->getName()]);
+	return $renderer->render($response, 'invitation.html', ['name' => $user->getName() . ' さま']);
 });
 
 $app->run();
