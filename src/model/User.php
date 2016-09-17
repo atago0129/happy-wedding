@@ -17,4 +17,9 @@ class User
         }
 		return new UserEntity($record);
 	}
+
+	public function updateUserStatus(UserEntity $user)
+    {
+        (new UserDatabase(DatabaseConfig::getInstance()))->updateStatus($user->getId(), $user->getStatus());
+    }
 }

@@ -33,4 +33,15 @@ class User extends Database
 
 		$stmt->execute();
 	}
+
+	public function updateStatus($id, $status)
+    {
+        $sql = 'UPDATE user SET status = :status WHERE id = :id';
+        $pdo = $this->getPDO();
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':status', $status);
+
+        $stmt->execute();
+    }
 }

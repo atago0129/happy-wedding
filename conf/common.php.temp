@@ -1,0 +1,5 @@
+<?php
+
+return [
+    'csrf_token_salt' => 'SALT',
+];

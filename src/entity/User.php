@@ -46,12 +46,20 @@ class User
 	}
 
 	/**
-	 * @return string
+	 * @return int
 	 */
 	public function getType()
 	{
 		return $this->type;
 	}
+
+    /**
+     * @return int
+     */
+	public function getStatus()
+    {
+        return $this->status;
+    }
 
 	public function toAssoc()
 	{
@@ -61,4 +69,9 @@ class User
 			'type' => $this->type,
 		];
 	}
+
+	public function setStatus($status)
+    {
+        $this->status = $status;
+    }
 }
