@@ -12,7 +12,7 @@ class User extends Database
 	 */
 	public function fetchUserById($id)
 	{
-		$sql = 'SELECT * FROM user WHERE id = :id';
+		$sql = 'SELECT * FROM user LEFT OUTER JOIN user_gift ON user.id = user_gift.user_id WHERE user.id = :id';
 		$pdo = $this->getPDO();
 		$stmt = $pdo->prepare($sql);
 		$stmt->bindValue(':id', $id, \PDO::PARAM_STR);
@@ -22,25 +22,24 @@ class User extends Database
 		return $stmt->fetch(\PDO::FETCH_ASSOC);
 	}
 
-	public function insert($id, $name, $type)
-	{
-		$sql = 'INSERT INTO user (id, name, type) VALUES (:id, :name, :type)';
-		$pdo = $this->getPDO();
-		$stmt = $pdo->prepare($sql);
-		$stmt->bindValue(':id', $id);
-		$stmt->bindValue(':name', $name);
-		$stmt->bindValue(':type', $type);
-
-		$stmt->execute();
-	}
-
 	public function updateStatus($id, $status)
     {
         $sql = 'UPDATE user SET status = :status WHERE id = :id';
         $pdo = $this->getPDO();
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':id', $id);
-        $stmt->bindValue(':status', $status);
+        $stmt->bindValue(':status', $status, \PDO::PARAM_INT);
+
+        $stmt->execute();
+    }
+
+    public function insertUserGift($userId, $giftId)
+    {
+        $sql = 'INSERT INTO user_gift (user_id, gift_id) VALUES (:user_id, :gift_id)';
+        $pdo = $this->getPDO();
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':user_id', $userId);
+        $stmt->bindValue(':gift_id', $giftId);
 
         $stmt->execute();
     }

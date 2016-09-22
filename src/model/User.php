@@ -22,4 +22,9 @@ class User
     {
         (new UserDatabase(DatabaseConfig::getInstance()))->updateStatus($user->getId(), $user->getStatus());
     }
+
+    public function decisionGift(UserEntity $user)
+    {
+        (new UserDatabase(DatabaseConfig::getInstance()))->insertUserGift($user->getId(), $user->getGiftId());
+    }
 }

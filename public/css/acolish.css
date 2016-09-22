@@ -123,3 +123,93 @@ li.guestName {
 .rsvpNonPart:hover {
     color: #b7b7b7;
 }
+
+.listHeader {
+    margin-bottom: 30px;
+    padding: 12px;
+    background-color: #6c8844;
+    color: #fdf4e0;
+    border-radius: 10px;
+}
+
+.listFooter {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.listFooter a {
+    color: #5d5c5c;
+}
+
+.listFooter a:hover {
+    color: #000000;
+    font-weight: bold;
+}
+
+.itemList {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -webkit-justify-content: space-around;
+    justify-content: space-around;
+}
+
+.itemList li {
+    padding: 5px;
+}
+
+.itemList li figure {
+    width: 360px;
+}
+
+.itemList li figure img {
+    width: 100%;
+}
+
+.modalSelectButtons {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    flex: 1;
+    -webkit-flex: 1;
+    justify-content: space-around;
+    -webkit-justify-content: space-around;
+}
+
+.modalSelectButtons li {
+    flex-grow: 1;
+    -webkit-flex-grow: 1;
+}
+
+.modalSelectButtons li p {
+    padding-bottom: 8px;
+    cursor: pointer;
+    text-align: center;
+    color: #8c8c8c;
+}
+
+.modalSelectButtons li p:hover {
+    color: #000;
+    font-weight: bold;
+}
+
+.modalTitle {
+    margin: 20px 20px 0 20px;
+}
+
+.modalDescription {
+    margin: 0 20px;
+}
+
+h2.modalDescription {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.modalImage {
+    display: block;
+    margin: 10px auto;
+}

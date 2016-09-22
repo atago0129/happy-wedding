@@ -5,8 +5,8 @@ namespace acolish\entity;
 
 class User
 {
-	const TYPE_NORMAL = 0;
-	const TYPE_SPECIAL = 1;
+	const GIFT_TYPE_NORMAL = 0;
+	const GIFT_TYPE_SPECIAL = 1;
 
     const STATUS_UNANSWERED = 0;
     const STATUS_NON_PARTICIPANT = 1;
@@ -19,17 +19,20 @@ class User
 
     private $displayName;
 
-	private $type;
+	private $giftType;
 
     private $status;
+
+    private $giftId;
 
 	public function __construct($record)
 	{
 		$this->id = isset($record['id']) ? $record['id'] : null;
 		$this->name = isset($record['name']) ? $record['name'] : null;
         $this->displayName = isset($record['displayName']) ? $record['displayName'] : null;
-		$this->type = isset($record['type']) ? $record['type'] : null;
-        $this->status = isset($record['status']) ? $record['status'] : null;
+		$this->giftType = isset($record['gift_type']) ? intval($record['gift_type']) : null;
+        $this->status = isset($record['status']) ? intval($record['status']) : null;
+        $this->giftId = isset($record['gift_id']) ? $record['gift_id'] : null;
 	}
 
 	/**
@@ -56,10 +59,23 @@ class User
 	/**
 	 * @return int
 	 */
-	public function getType()
+	public function getGiftType()
 	{
-		return $this->type;
+		return $this->giftType;
 	}
+
+    /**
+     * @return string
+     */
+    public function getGiftId()
+    {
+        return $this->giftId;
+    }
+
+    public function setGiftId($giftId)
+    {
+        $this->giftId = $giftId;
+    }
 
     /**
      * @return int
@@ -74,12 +90,13 @@ class User
 		return [
 			'id' => $this->id,
 			'name' => $this->name,
-			'type' => $this->type,
+			'type' => $this->giftType,
 		];
 	}
 
 	public function setStatus($status)
     {
-        $this->status = $status;
+        $this->status = intval($status);
     }
+
 }

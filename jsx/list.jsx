@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDom from "react-dom";
 import Modal from 'react-modal';
+import Request from 'superagent';
 
 class Item extends React.Component {
     _handleClick(e) {
@@ -77,8 +78,13 @@ class ItemModalWindow extends React.Component {
 }
 
 class ConfirmModalWindow extends React.Component {
-    _handleClick(e) {
+    clickCancel(e) {
         this.props.closeModal(this.props.confirmKey);
+    }
+
+    clickDecision(e) {
+        this.props.requestPresent(this.props.itemData.key);
+        this.props.closeModal(this.props.confirmKey)
     }
 
     onRequestClose() {
@@ -96,8 +102,61 @@ class ConfirmModalWindow extends React.Component {
                     <p className="modalDescription">以下の商品で確定します。よろしいですか？</p>
                     <h2 className="modalDescription">{this.props.itemData.name}</h2>
                     <ul className="modalSelectButtons">
-                        <li><p onClick={this._handleClick.bind(this)}>キャンセル</p></li>
-                        <li><p onClick={this._handleClick.bind(this)}>確定</p></li>
+                        <li><p onClick={this.clickCancel.bind(this)}>キャンセル</p></li>
+                        <li><p onClick={this.clickDecision.bind(this)}>確定</p></li>
+                    </ul>
+                </div>
+            </Modal>
+        );
+    }
+}
+
+class AlertModal extends React.Component {
+    _handleClick(e) {
+        this.props.closeModal();
+    }
+
+    onRequestClose() {
+        this.props.closeModal();
+    }
+
+    render() {
+        return (
+            <Modal isOpen={this.props.display}
+                   onRequestClose={this.onRequestClose.bind(this)}
+                   style={modalWindowStyle}
+            >
+                <div>
+                    <h1 className="modalTitle">エラー</h1>
+                    <p className="modalDescription">不明なエラーが発生しました。ページをリロードし、しばらくおいてから試してください。。</p>
+                    <p className="modalDescription">何度もこのメッセージが表示される場合、お手数ですが新郎新婦までご連絡ください。</p>
+                    <p className="modalDescription">エラーコード: {this.props.errorCode}</p>
+                    <ul className="modalSelectButtons">
+                        <li><p onClick={this._handleClick.bind(this)}>確認</p></li>
+                    </ul>
+                </div>
+            </Modal>
+        );
+    }
+}
+
+class MessageModal extends React.Component {
+    onRequestClose() {
+        // nothing to do
+    }
+
+    render() {
+        return (
+            <Modal isOpen={this.props.display}
+                   onRequestClose={this.onRequestClose.bind(this)}
+                   style={modalWindowStyle}
+            >
+                <div>
+                    <h1 className="modalTitle">お土産物登録完了</h1>
+                    <p className="modalDescription">お土産物のご希望を承りました。当日お渡しできることを楽しみにしております。</p>
+                    <p className="modalDescription">なお、諸般の事情によりご希望に添えない可能性がございますが、その際は何卒ご理解いただけますと幸いです。</p>
+                    <ul className="modalSelectButtons">
+                        <li><a href={location.href}><p>確認</p></a></li>
                     </ul>
                 </div>
             </Modal>
@@ -122,7 +181,10 @@ class App extends React.Component {
             modalDisplay: modalDisplay,
             showModalKey: null,
             confirmDisplay: confirmDisplay,
-            confirmKey: null
+            confirmKey: null,
+            alertModalDisplay: false,
+            errorCode: 'unknown error',
+            messageModalDisplay: false
         }
     }
 
@@ -182,6 +244,53 @@ class App extends React.Component {
         }
     }
 
+    openAlertModal() {
+        this.setState({
+            alertModalDisplay: true
+        });
+    }
+
+    setAlertModalErrorCode(errorCode) {
+        this.setState({
+            errorCode: errorCode
+        });
+    }
+
+    closeAlertModal() {
+        this.setState({
+            alertModalDisplay: false
+        });
+    }
+
+    openMessageModal() {
+        this.setState({
+            messageModalDisplay: true
+        });
+    }
+
+    requestPresent(giftId) {
+        var _this = this;
+        Request.post(window.location.href)
+            .send({token: this.props.token, giftId: giftId})
+            .end((err, res) => {
+                var result = JSON.parse(res.text);
+                if(err) {
+                    console.log(res);
+                    if (result && result.error && result.error.code) {
+                        _this.setAlertModalErrorCode(result.error.code)
+                    }
+                    _this.openAlertModal();
+                } else {
+                    if (result.status !== 'ok') {
+                        _this.setAlertModalErrorCode(result.error.code);
+                        _this.openAlertModal();
+                    } else {
+                        _this.openMessageModal();
+                    }
+                }
+            });
+    }
+
     render() {
         var _this = this;
         return (
@@ -205,8 +314,11 @@ class App extends React.Component {
                         confirmKey={key}
                         display={_this.state.confirmDisplay[key]}
                         closeModal={_this.closeConfirmModal.bind(_this)}
+                        requestPresent={_this.requestPresent.bind(_this)}
                         itemData={item} />
                 })}
+                <AlertModal display={this.state.alertModalDisplay} closeModal={this.closeAlertModal.bind(this)} errorCode={this.state.errorCode} />
+                <MessageModal display={this.state.messageModalDisplay} />
             </section>
         );
     }
@@ -214,7 +326,7 @@ class App extends React.Component {
 
 var data = JSON.parse(document.getElementById('listDataProvider').getAttribute('data-list'));
 ReactDom.render(
-    <App itemList={data} />,
+    <App token={document.getElementById('token').getAttribute('data-token')} itemList={data} />,
     document.getElementById('container')
 );
 

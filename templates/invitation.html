@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>ご招待状</title>
-    <link rel="stylesheet" type="text/css" href="../css/acolish.css" />
+    <link rel="stylesheet" type="text/css" href="/css/acolish.css" />
 </head>
 <body class="main">
 <div class="content">
@@ -11,7 +11,7 @@
         <ul>
             <li class="guestName"><?= $name ?></li>
         </ul>
-        <img class="mainIcon" src="../img/icon/01.png">
+        <img class="mainIcon" src="/img/icon/01.png">
     </div>
     <div class="invitationMessage">
         <h1>ご挨拶</h1>
@@ -48,6 +48,6 @@
 </div>
 <div id="token" data-token="<?= htmlspecialchars($token) ?>"></div>
 <div id="userStatus" data-user-status="<?= $status ?>"></div>
-<script src="../js/rsvp.min.js"></script>
+<script src="/js/rsvp.min.js"></script>
 </body>
 </html>

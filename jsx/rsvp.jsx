@@ -46,11 +46,11 @@ class RsvpModal extends React.Component {
 
 class AlertModal extends React.Component {
     _handleClick(e) {
-        this.props.closeAlertModal();
+        this.props.closeModal();
     }
 
     onRequestClose() {
-        this.props.closeAlertModal();
+        this.props.closeModal();
     }
 
     render() {
@@ -60,18 +60,41 @@ class AlertModal extends React.Component {
                    style={modalWindowStyle}
             >
                 <div>
-                    <p>不明なエラーが発生しました。ページをリロードし、しばらくおいてから試してください。</p>
-                    <p>何度もこのメッセージが表示される場合、お手数ですが新郎新婦までご連絡ください。</p>
-                    <p>エラーコード: {this.props.errorCode}</p>
-                    <button className="rsvpButton" onClick={this._handleClick.bind(this)}>確認</button>
+                    <h1 className="modalTitle">エラー</h1>
+                    <p className="modalDescription">不明なエラーが発生しました。ページをリロードし、しばらくおいてから試してください。。</p>
+                    <p className="modalDescription">何度もこのメッセージが表示される場合、お手数ですが新郎新婦までご連絡ください。</p>
+                    <p className="modalDescription">エラーコード: {this.props.errorCode}</p>
+                    <ul className="modalSelectButtons">
+                        <li><p onClick={this._handleClick.bind(this)}>確認</p></li>
+                    </ul>
                 </div>
             </Modal>
         );
     }
 }
 
-class ConfirmModal extends React.Component {
-    // TODO 出欠確定後のモーダルを作成し、出席なら引き出物ページへ、欠席ならTOPへ飛ばす
+class MessageModal extends React.Component {
+    onRequestClose() {
+        // nothing to do
+    }
+
+    render() {
+        return (
+            <Modal isOpen={this.props.display}
+                   onRequestClose={this.onRequestClose.bind(this)}
+                   style={modalWindowStyle}
+            >
+                <div>
+                    <h1 className="modalTitle">ご出欠登録完了</h1>
+                    <p className="modalDescription">ご回答頂きありがとうございました。</p>
+                    <p className="modalDescription">出欠のご変更は○月○日まで可能となっております。</p>
+                    <ul className="modalSelectButtons">
+                        <li><a href={location.href + '/present'}><p>確認</p></a></li>
+                    </ul>
+                </div>
+            </Modal>
+        );
+    }
 }
 
 class Rsvp extends React.Component {
@@ -80,9 +103,16 @@ class Rsvp extends React.Component {
         this.state = {
             rsvpModalDisplay: false,
             alertModalDisplay: false,
+            messageModalDisplay: false,
             errorCode: 'unknown error',
             userStatus: parseInt(props.status)
         };
+    }
+
+    setUserStatus(status) {
+        this.setState({
+            userStatus: status
+        });
     }
 
     openModal() {
@@ -115,31 +145,37 @@ class Rsvp extends React.Component {
         });
     }
 
+    openMessageModal() {
+        this.setState({
+            messageModalDisplay: true
+        });
+    }
+
     requestRsvp(status) {
         var _this = this;
         Request.post(window.location.href + '/rsvp')
             .send({token: this.props.token, status: status})
             .end((err, res) => {
+                var result = JSON.parse(res.text);
                 if(err) {
-                    console.log(err);
+                    console.log(res);
+                    if (result && result.error && result.error.code) {
+                        _this.setAlertModalErrorCode(result.error.code)
+                    }
                     _this.openAlertModal();
-                    window.alert('不明なエラーが発生しました。ページをリロードし再度試してください。')
                 } else {
-                    var result = JSON.parse(res.text);
                     if (result.status !== 'ok') {
-
-                    } else {
                         _this.setAlertModalErrorCode(result.error.code);
                         _this.openAlertModal();
+                    } else {
+                        _this.openMessageModal();
+                        _this.setUserStatus(result.result.status);
                     }
-
-                    console.log(res);
                 }
             });
     }
 
     render() {
-        var presentUrl = location.href + '/present';
         return (
             <section>
                 <div className="rsvp">
@@ -147,10 +183,11 @@ class Rsvp extends React.Component {
                     {this.state.userStatus === 1 ? <button className="rsvpButton" onClick={this.openModal.bind(this)}>出欠を変更する（御欠席で回答済み）</button> : null}
                     {(this.state.userStatus === 2 || this.state.userStatus === 10) ? <button className="rsvpButton" onClick={this.openModal.bind(this)}>出欠を変更する（御出席で回答済み）</button> : null}
                 </div>
-                {this.state.userStatus === 2 ?  <div className="rsvp"><a href={presentUrl}><button className="rsvpButton">お土産を選択する</button></a></div> : null}
+                {this.state.userStatus === 2 ?  <div className="rsvp"><a href={location.href + '/present'}><button className="rsvpButton">お土産を選択する</button></a></div> : null}
                 {this.state.userStatus > 0 ?  <div className="rsvp"><p>※出欠は○月○日まで変更可能です</p></div> : null}
                 <RsvpModal display={this.state.rsvpModalDisplay} closeModal={this.closeModal.bind(this)} requestRsvp={this.requestRsvp.bind(this)} />
                 <AlertModal display={this.state.alertModalDisplay} closeModal={this.closeAlertModal.bind(this)} errorCode={this.state.errorCode} />
+                <MessageModal display={this.state.messageModalDisplay} />
             </section>
         );
     }
