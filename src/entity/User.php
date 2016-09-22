@@ -17,6 +17,8 @@ class User
 
 	private $name;
 
+    private $displayName;
+
 	private $type;
 
     private $status;
@@ -25,6 +27,7 @@ class User
 	{
 		$this->id = isset($record['id']) ? $record['id'] : null;
 		$this->name = isset($record['name']) ? $record['name'] : null;
+        $this->displayName = isset($record['displayName']) ? $record['displayName'] : null;
 		$this->type = isset($record['type']) ? $record['type'] : null;
         $this->status = isset($record['status']) ? $record['status'] : null;
 	}
@@ -44,6 +47,11 @@ class User
 	{
 		return $this->name;
 	}
+
+	public function getDisplayName()
+    {
+        return $this->displayName;
+    }
 
 	/**
 	 * @return int

@@ -36,12 +36,12 @@ $app->get('/{id}', function(\Slim\Http\Request $request, $response) {
 	/** @var \Slim\Views\PhpRenderer $renderer */
 	$renderer = $this->renderer;
 	return $renderer->render($response, 'invitation.html', [
-	    'name' => $user->getName() . ' さま',
+	    'name' => $user->getDisplayName(),
         'token' => (new \acolish\model\Token(\acolish\config\CommonConfig::getInstance()->get('csrf_token_salt')))->generateTokenString($id, time())
     ]);
 });
 
-$app->post('/{id}/rvsp', function ($request, $response) {
+$app->post('/{id}/rsvp', function ($request, $response) {
     /** @var \Slim\Http\Request $request */
     /** @var \Slim\Http\Response $response */
     $id = $request->getAttribute('id');
@@ -74,7 +74,9 @@ $app->post('/{id}/rvsp', function ($request, $response) {
 
     (new \acolish\model\User())->updateUserStatus($user);
 
-    return $response->withJson(['status' => 'ok',], 200);
+    // TODO Slack通知
+
+    return $response->withJson(['status' => 'ok', 'result' => ['id' => $user->getId(), 'status' => $user->getStatus()]], 200);
 
 });
 
