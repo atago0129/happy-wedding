@@ -1,3 +1,11 @@
+.listHeader {
+    margin-bottom: 30px;
+    padding: 12px;
+    background-color: #6c8844;
+    color: #fdf4e0;
+    border-radius: 10px;
+}
+
 .itemList {
     display: flex;
     display: -webkit-flex;
