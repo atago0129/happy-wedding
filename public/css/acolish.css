@@ -59,6 +59,12 @@ li {
     max-height: 606px;
 }
 
+.mapLink {
+    font-size: 60%;
+    text-decoration: underline;
+    color: #0b0fc3;
+}
+
 .invitationMessage {
     text-align: center;
     padding: 24px;
