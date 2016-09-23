@@ -20,16 +20,12 @@ class Gift
     /** @var string */
     private $description;
 
-    /** @var string */
-    private $image;
-
     public function __construct($record)
     {
         $this->id = isset($record['id']) ? $record['id'] : null;
         $this->type = isset($record['type']) ? intval($record['type']) : null;
         $this->name = isset($record['name']) ? $record['name'] : null;
         $this->description = isset($record['description']) ? $record['description'] : null;
-        $this->image = isset($record['image']) ? $record['image'] : null;
     }
 
     /**
@@ -69,7 +65,7 @@ class Gift
      */
     public function getImage()
     {
-        return $this->image;
+        return '/img/' . $this->id . '.png';
     }
 
     /**
@@ -80,7 +76,7 @@ class Gift
             'key' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'image' => $this->image,
+            'image' => $this->getImage(),
         ];
     }
 

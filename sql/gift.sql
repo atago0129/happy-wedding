@@ -3,7 +3,6 @@ CREATE TABLE `gift` (
   `type` TINYINT(4) DEFAULT 0 NOT NULL,
   `name` VARCHAR(255) NOT NULL,
   `description` VARCHAR(255) NOT NULL,
-  `image` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
