@@ -183,7 +183,12 @@ class Rsvp extends React.Component {
                     {this.state.userStatus === 1 ? <button className="rsvpButton" onClick={this.openModal.bind(this)}>出欠を変更する（御欠席で回答済み）</button> : null}
                     {(this.state.userStatus === 2 || this.state.userStatus === 10) ? <button className="rsvpButton" onClick={this.openModal.bind(this)}>出欠を変更する（御出席で回答済み）</button> : null}
                 </div>
-                {this.state.userStatus === 2 ?  <div className="rsvp"><a href={location.href + '/present'}><button className="rsvpButton">お土産を選択する</button></a></div> : null}
+                {this.state.userStatus === 2 ?
+                    (this.props.giftName === ''  ?
+                        <div className="rsvp"><a href={location.href + '/present'}><button className="rsvpButton">お土産を選択する</button></a></div> :
+                        <div className="rsvp"><p>お土産： {this.props.giftName}</p></div>
+                    ) : null
+                }
                 {this.state.userStatus > 0 ?  <div className="rsvp"><p>※出欠は○月○日まで変更可能です</p></div> : null}
                 <RsvpModal display={this.state.rsvpModalDisplay} closeModal={this.closeModal.bind(this)} requestRsvp={this.requestRsvp.bind(this)} />
                 <AlertModal display={this.state.alertModalDisplay} closeModal={this.closeAlertModal.bind(this)} errorCode={this.state.errorCode} />
@@ -196,6 +201,10 @@ class Rsvp extends React.Component {
 
 
 ReactDom.render(
-    <Rsvp token={document.getElementById('token').getAttribute('data-token')} status={document.getElementById('userStatus').getAttribute('data-user-status')} />,
+    <Rsvp
+        token={document.getElementById('token').getAttribute('data-token')}
+        status={document.getElementById('userStatus').getAttribute('data-user-status')}
+        giftName={document.getElementById('giftName').getAttribute('data-gift-name')}
+    />,
     document.getElementById('container')
 );

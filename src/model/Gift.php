@@ -9,6 +9,10 @@ use acolish\entity\Gift as GiftEntity;
 class Gift
 {
     public function getById($id) {
+        if (!$id) {
+            return null;
+        }
+
         $record = (new GiftDatabase(DatabaseConfig::getInstance()))->fetchById($id);
         if (!$record) {
             return null;

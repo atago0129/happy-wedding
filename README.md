@@ -13,4 +13,5 @@ vinyl-source-stream
 react
 react-dom
 react-modal
+superagent
 ```

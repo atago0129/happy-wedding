@@ -14,19 +14,15 @@ $container['renderer'] = function ($c) {
 };
 
 $container['notFoundHandler'] = function ($c) {
-    return function ($request, $response) use ($c) {
+    return function (\Slim\Http\Request $request, $response) use ($c) {
+        if(strpos($request->getRequestTarget(), '/wedding') === 0) {
+            return $c['renderer']->render($response, '404-wedding.html', []);
+        }
         return $c['renderer']->render($response, '404.html', []);
     };
 };
 
-$app->get('/list_test', function(\Slim\Http\Request $request, $response) {
-    $gifts = (new \acolish\model\Gift())->getGiftsByType(0);
-    var_dump(json_encode(array_map(function(\acolish\entity\Gift $gift) {
-        return $gift->toAssoc();
-    }, $gifts)));exit;
-});
-
-$app->get('/{id}', function(\Slim\Http\Request $request, \Slim\Http\Response $response) {
+$app->get('/wedding/{id}', function(\Slim\Http\Request $request, \Slim\Http\Response $response) {
 	$id = $request->getAttribute('id');
 	$user = (new \acolish\model\User())->getUserById($id);
 
@@ -34,16 +30,19 @@ $app->get('/{id}', function(\Slim\Http\Request $request, \Slim\Http\Response $re
         throw new \Slim\Exception\NotFoundException($request, $response);
     }
 
+    $gift = (new \acolish\model\Gift())->getById($user->getGiftId());
+
 	/** @var \Slim\Views\PhpRenderer $renderer */
 	$renderer = $this->renderer;
 	return $renderer->render($response, 'invitation.html', [
 	    'name' => $user->getDisplayName(),
         'status' => $user->getStatus(),
+        'giftName' => $gift ? $gift->getName() : null,
         'token' => (new \acolish\model\Token(\acolish\config\CommonConfig::getInstance()->get('csrf_token_salt')))->generateTokenString($id, time())
     ]);
 });
 
-$app->post('/{id}/rsvp', function (\Slim\Http\Request $request, \Slim\Http\Response $response) {
+$app->post('/wedding/{id}/rsvp', function (\Slim\Http\Request $request, \Slim\Http\Response $response) {
     $id = $request->getAttribute('id');
 
     $tokenString = $request->getParam('token');
@@ -63,7 +62,7 @@ $app->post('/{id}/rsvp', function (\Slim\Http\Request $request, \Slim\Http\Respo
 
     if (!in_array($status, [
         \acolish\entity\User::STATUS_NON_PARTICIPANT,
-        \acolish\entity\User::STATUS_UNSELECTED_PRESENT,
+        \acolish\entity\User::STATUS_PARTICIPANT,
     ], true)) {
         return $response->withJson(['status' => 'ng', 'error' => ['code' => 'invalid_status']], 401);
     }
@@ -78,7 +77,7 @@ $app->post('/{id}/rsvp', function (\Slim\Http\Request $request, \Slim\Http\Respo
 
 });
 
-$app->get('/{id}/present', function (\Slim\Http\Request $request, \Slim\Http\Response $response) {
+$app->get('/wedding/{id}/present', function (\Slim\Http\Request $request, \Slim\Http\Response $response) {
     $id = $request->getAttribute('id');
     $user = (new \acolish\model\User())->getUserById($id);
 
@@ -86,8 +85,8 @@ $app->get('/{id}/present', function (\Slim\Http\Request $request, \Slim\Http\Res
         throw new \Slim\Exception\NotFoundException($request, $response);
     }
 
-    if ($user->getStatus() !== \acolish\entity\User::STATUS_UNSELECTED_PRESENT) {
-        return $response->withStatus(302)->withHeader('Location', '/' . $id);
+    if ($user->getStatus() !== \acolish\entity\User::STATUS_PARTICIPANT || $user->getGiftId()) {
+        return $response->withStatus(302)->withHeader('Location', '/wedding/' . $id);
     }
 
     $gifts = (new \acolish\model\Gift())->getGiftsByType($user->getGiftType());
@@ -102,7 +101,7 @@ $app->get('/{id}/present', function (\Slim\Http\Request $request, \Slim\Http\Res
     ]);
 });
 
-$app->post('/{id}/present', function (\Slim\Http\Request $request, \Slim\Http\Response $response) {
+$app->post('/wedding/{id}/present', function (\Slim\Http\Request $request, \Slim\Http\Response $response) {
     $id = $request->getAttribute('id');
 
     $tokenString = $request->getParam('token');
@@ -132,15 +131,12 @@ $app->post('/{id}/present', function (\Slim\Http\Request $request, \Slim\Http\Re
     }
 
     // TODO STATUS_UNSELECTED_PRESENTを利用するのではなく、出席というステータスとuser_giftレコードがあるかで比較するように修正する
-    if ($user->getStatus() !== \acolish\entity\User::STATUS_UNSELECTED_PRESENT) {
+    if ($user->getStatus() !== \acolish\entity\User::STATUS_PARTICIPANT || $user->getGiftId()) {
         return $response->withJson(['status' => 'ng', 'error' => ['code' => 'unauthorized_request']], 401);
     }
 
     $user->setGiftId($gift->getId());
-    $user->setStatus(\acolish\entity\User::STATUS_SELECTED_PRESENT);
-    // TODO 更新系びみょい
     $userModel->decisionGift($user);
-    $userModel->updateUserStatus($user);
 
     // TODO Slack通知
 

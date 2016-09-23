@@ -10,8 +10,7 @@ class User
 
     const STATUS_UNANSWERED = 0;
     const STATUS_NON_PARTICIPANT = 1;
-    const STATUS_UNSELECTED_PRESENT = 2;
-    const STATUS_SELECTED_PRESENT = 10;
+    const STATUS_PARTICIPANT = 2;
 
 	private $id;
 
