@@ -13,12 +13,18 @@ $container['renderer'] = function ($c) {
 	return new Slim\Views\PhpRenderer($settings['template_path']);
 };
 
+$container['errorHandler'] = function ($c) {
+    return function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($c) {
+        return $c['renderer']->render($response->withStatus(500)->withHeader('Content-Type', 'text/html'), '500.html', []);
+    };
+};
+
 $container['notFoundHandler'] = function ($c) {
-    return function (\Slim\Http\Request $request, $response) use ($c) {
+    return function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($c) {
         if(strpos($request->getRequestTarget(), '/wedding') === 0) {
-            return $c['renderer']->render($response, '404-wedding.html', []);
+            return $c['renderer']->render($response->withStatus(404)->withHeader('Content-Type', 'text/html'), '404-wedding.html', []);
         }
-        return $c['renderer']->render($response, '404.html', []);
+        return $c['renderer']->render($response->withStatus(404)->withHeader('Content-Type', 'text/html'), '404.html', []);
     };
 };
 
