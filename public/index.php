@@ -71,7 +71,7 @@ $app->post('/wedding/{id}/rsvp', function (\Slim\Http\Request $request, \Slim\Ht
 
     (new \acolish\model\User())->updateUserStatus($user);
 
-    // TODO Slack通知
+    (new \acolish\model\Slack(\acolish\config\CommonConfig::getInstance()->get('slack')))->rsvpNotify($user);
 
     return $response->withJson(['status' => 'ok', 'result' => ['id' => $user->getId(), 'status' => $user->getStatus()]], 200);
 
@@ -130,7 +130,6 @@ $app->post('/wedding/{id}/present', function (\Slim\Http\Request $request, \Slim
         return $response->withJson(['status' => 'ng', 'error' => ['code' => 'not_found_gift']], 404);
     }
 
-    // TODO STATUS_UNSELECTED_PRESENTを利用するのではなく、出席というステータスとuser_giftレコードがあるかで比較するように修正する
     if ($user->getStatus() !== \acolish\entity\User::STATUS_PARTICIPANT || $user->getGiftId()) {
         return $response->withJson(['status' => 'ng', 'error' => ['code' => 'unauthorized_request']], 401);
     }
@@ -138,7 +137,7 @@ $app->post('/wedding/{id}/present', function (\Slim\Http\Request $request, \Slim
     $user->setGiftId($gift->getId());
     $userModel->decisionGift($user);
 
-    // TODO Slack通知
+    (new \acolish\model\Slack(\acolish\config\CommonConfig::getInstance()->get('slack')))->presentNotify($user, $gift);
 
     return $response->withJson(['status' => 'ok', 'result' => ['id' => $user->getId(), 'status' => $user->getStatus(), 'giftId' => $gift->getId()]], 200);
 });

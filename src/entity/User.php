@@ -84,6 +84,23 @@ class User
         return $this->status;
     }
 
+    /**
+     * @return string
+     */
+    public function getStatusString()
+    {
+        switch ($this->status) {
+            case self::STATUS_UNANSWERED:
+                return '未回答';
+            case self::STATUS_NON_PARTICIPANT:
+                return '欠席';
+            case self::STATUS_PARTICIPANT:
+                return '出席';
+            default:
+                throw new \RuntimeException('出欠ステータスが不整合を起こしています');
+        }
+    }
+
 	public function toAssoc()
 	{
 		return [

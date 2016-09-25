@@ -32,16 +32,20 @@ class List extends React.Component {
     }
 }
 
-let modalWindowStyle = {
-    content : {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        transform: 'translate(-50%, -50%)',
-        padding: 0
+class LoadingModal extends React.Component {
+    onRequestClose() {
+        // nothing to do
     }
-};
+
+    render() {
+        return (
+            <Modal isOpen={this.props.display}
+                   onRequestClose={this.onRequestClose.bind(this)}
+                   className="modal loadingModal"
+            />
+        );
+    }
+}
 
 class ItemModalWindow extends React.Component {
     clickSelect(e) {
@@ -61,7 +65,7 @@ class ItemModalWindow extends React.Component {
         return (
             <Modal isOpen={this.props.display}
                    onRequestClose={this.onRequestClose.bind(this)}
-                   style={modalWindowStyle}
+                   className="modal"
             >
                 <div>
                     <h1 className="modalTitle">{this.props.itemData.name}</h1>
@@ -95,7 +99,7 @@ class ConfirmModalWindow extends React.Component {
         return (
             <Modal isOpen={this.props.display}
                    onRequestClose={this.onRequestClose.bind(this)}
-                   style={modalWindowStyle}
+                   className="modal"
             >
                 <div>
                     <h1 className="modalTitle">確認</h1>
@@ -124,7 +128,7 @@ class AlertModal extends React.Component {
         return (
             <Modal isOpen={this.props.display}
                    onRequestClose={this.onRequestClose.bind(this)}
-                   style={modalWindowStyle}
+                   className="modal"
             >
                 <div>
                     <h1 className="modalTitle">エラー</h1>
@@ -149,7 +153,7 @@ class MessageModal extends React.Component {
         return (
             <Modal isOpen={this.props.display}
                    onRequestClose={this.onRequestClose.bind(this)}
-                   style={modalWindowStyle}
+                   className="modal"
             >
                 <div>
                     <h1 className="modalTitle">お土産物登録完了</h1>
@@ -184,7 +188,8 @@ class App extends React.Component {
             confirmKey: null,
             alertModalDisplay: false,
             errorCode: 'unknown error',
-            messageModalDisplay: false
+            messageModalDisplay: false,
+            loadingModalDisplay: false
         }
     }
 
@@ -224,26 +229,6 @@ class App extends React.Component {
         });
     }
 
-    closeOnBackGround(e) {
-        var targetStyle = e.target.getAttribute('style');
-        if (targetStyle !== null && targetStyle.indexOf('z-index: 10000;') !== -1) {
-            var modalDisplay = this.state.modalDisplay;
-            if (this.state.showModalKey) {
-                modalDisplay[this.state.showModalKey] = false;
-            }
-            var confirmDisplay = this.state.confirmDisplay;
-            if (this.state.confirmKey) {
-                confirmDisplay[this.state.confirmKey] = false;
-            }
-            this.setState({
-                modalDisplay: modalDisplay,
-                showModalKey: null,
-                confirmDisplay: confirmDisplay,
-                confirmKey: null
-            });
-        }
-    }
-
     openAlertModal() {
         this.setState({
             alertModalDisplay: true
@@ -268,7 +253,20 @@ class App extends React.Component {
         });
     }
 
+    openLoadingModal() {
+        this.setState({
+            loadingModalDisplay: true
+        });
+    }
+
+    closeLoadingModal() {
+        this.setState({
+            loadingModalDisplay: false
+        });
+    }
+
     requestPresent(giftId) {
+        this.openLoadingModal();
         var _this = this;
         Request.post(window.location.href)
             .send({token: this.props.token, giftId: giftId})
@@ -279,12 +277,15 @@ class App extends React.Component {
                     if (result && result.error && result.error.code) {
                         _this.setAlertModalErrorCode(result.error.code)
                     }
+                    _this.closeLoadingModal();
                     _this.openAlertModal();
                 } else {
                     if (result.status !== 'ok') {
                         _this.setAlertModalErrorCode(result.error.code);
+                        _this.closeLoadingModal();
                         _this.openAlertModal();
                     } else {
+                        _this.closeLoadingModal();
                         _this.openMessageModal();
                     }
                 }
@@ -294,7 +295,8 @@ class App extends React.Component {
     render() {
         var _this = this;
         return (
-            <section id="mainBody" onClick={this.closeOnBackGround.bind(this)}>
+            <section>
+                <LoadingModal display={this.state.loadingModalDisplay} />
                 <List itemList={this.props.itemList} openModal={this.openItemModal.bind(this)} />
                 {this.props.itemList.map(function(item) {
                     var key = "modal_" + item.key;

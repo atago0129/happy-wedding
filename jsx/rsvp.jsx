@@ -3,18 +3,20 @@ import ReactDom from "react-dom";
 import Modal from 'react-modal';
 import Request from 'superagent';
 
-let modalWindowStyle = {
-    content : {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        transform: 'translate(-50%, -50%)',
-        padding: 0,
-        backgroundColor: '#f5f4d1',
-        border: 'solid 1px #8BC34A'
+class LoadingModal extends React.Component {
+    onRequestClose() {
+        // nothing to do
     }
-};
+
+    render() {
+        return (
+            <Modal isOpen={this.props.display}
+                   onRequestClose={this.onRequestClose.bind(this)}
+                   className="modal loadingModal"
+            />
+        );
+    }
+}
 
 class RsvpModal extends React.Component {
     _handleClick(e) {
@@ -31,7 +33,7 @@ class RsvpModal extends React.Component {
         return (
             <Modal isOpen={this.props.display}
                    onRequestClose={this.onRequestClose.bind(this)}
-                   style={modalWindowStyle}
+                   className="modal"
             >
                 <div>
                     <ul className="content rsvpSelector">
@@ -57,7 +59,7 @@ class AlertModal extends React.Component {
         return (
             <Modal isOpen={this.props.display}
                    onRequestClose={this.onRequestClose.bind(this)}
-                   style={modalWindowStyle}
+                   className="modal"
             >
                 <div>
                     <h1 className="modalTitle">エラー</h1>
@@ -82,12 +84,12 @@ class MessageModal extends React.Component {
         return (
             <Modal isOpen={this.props.display}
                    onRequestClose={this.onRequestClose.bind(this)}
-                   style={modalWindowStyle}
+                   className="modal"
             >
                 <div>
                     <h1 className="modalTitle">ご出欠登録完了</h1>
                     <p className="modalDescription">ご回答頂きありがとうございました。</p>
-                    <p className="modalDescription">出欠のご変更は○月○日まで可能となっております。</p>
+                    <p className="modalDescription">出欠のご確定は11月4日までにお願いいたします。</p>
                     <ul className="modalSelectButtons">
                         <li><a href={location.href + '/present'}><p>確認</p></a></li>
                     </ul>
@@ -104,6 +106,7 @@ class Rsvp extends React.Component {
             rsvpModalDisplay: false,
             alertModalDisplay: false,
             messageModalDisplay: false,
+            loadingModalDisplay: false,
             errorCode: 'unknown error',
             userStatus: parseInt(props.status)
         };
@@ -151,7 +154,20 @@ class Rsvp extends React.Component {
         });
     }
 
+    openLoadingModal() {
+        this.setState({
+            loadingModalDisplay: true
+        });
+    }
+
+    closeLoadingModal() {
+        this.setState({
+            loadingModalDisplay: false
+        });
+    }
+
     requestRsvp(status) {
+        this.openLoadingModal();
         var _this = this;
         Request.post(window.location.href + '/rsvp')
             .send({token: this.props.token, status: status})
@@ -162,12 +178,15 @@ class Rsvp extends React.Component {
                     if (result && result.error && result.error.code) {
                         _this.setAlertModalErrorCode(result.error.code)
                     }
+                    _this.closeLoadingModal();
                     _this.openAlertModal();
                 } else {
                     if (result.status !== 'ok') {
                         _this.setAlertModalErrorCode(result.error.code);
+                        _this.closeLoadingModal();
                         _this.openAlertModal();
                     } else {
+                        _this.closeLoadingModal();
                         _this.openMessageModal();
                         _this.setUserStatus(result.result.status);
                     }
@@ -189,7 +208,8 @@ class Rsvp extends React.Component {
                         <div className="rsvp"><p>お土産： {this.props.giftName}</p></div>
                     ) : null
                 }
-                {this.state.userStatus > 0 ?  <div className="rsvp"><p>※出欠は○月○日まで変更可能です</p></div> : null}
+                {this.state.userStatus > 0 ?  <div className="rsvp"><p>※出欠のご確定は11月4日までにお願いいたします</p></div> : null}
+                <LoadingModal display={this.state.loadingModalDisplay} />
                 <RsvpModal display={this.state.rsvpModalDisplay} closeModal={this.closeModal.bind(this)} requestRsvp={this.requestRsvp.bind(this)} />
                 <AlertModal display={this.state.alertModalDisplay} closeModal={this.closeAlertModal.bind(this)} errorCode={this.state.errorCode} />
                 <MessageModal display={this.state.messageModalDisplay} />
