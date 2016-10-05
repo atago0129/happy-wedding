@@ -28,6 +28,61 @@ $container['notFoundHandler'] = function ($c) {
     };
 };
 
+$app->get('/wedding/contact', function(\Slim\Http\Request $request, \Slim\Http\Response $response) {
+    /** @var \Slim\Views\PhpRenderer $renderer */
+    $renderer = $this->renderer;
+    return $renderer->render($response, 'contact.html', [
+        'token' => (new \acolish\model\Token(\acolish\config\CommonConfig::getInstance()->get('csrf_token_salt')))->generateTokenString(null, time()),
+        'formUrl' => '/wedding/contact',
+        'topUrl' => '/wedding/',
+    ]);
+});
+
+$app->post('/wedding/contact', function(\Slim\Http\Request $request, \Slim\Http\Response $response) {
+    /** @var \Slim\Views\PhpRenderer $renderer */
+    $renderer = $this->renderer;
+
+
+    $tokenString = $request->getParam('token');
+
+    $token = (new \acolish\model\Token(\acolish\config\CommonConfig::getInstance()->get('csrf_token_salt')));
+    if (!$token->isValid(null, $tokenString)) {
+        // TODO きちんとエラー表示
+        return $renderer->render($response->withStatus(500)->withHeader('Content-Type', 'text/html'), '500.html', []);
+    }
+
+    $contactType = intval($request->getParam('type'));
+    if ($contactType < 0 || 3 < $contactType) {
+        // TODO きちんとエラー表示
+        return $renderer->render($response->withStatus(500)->withHeader('Content-Type', 'text/html'), '500.html', []);
+    }
+    $contactTypeMap = [
+        0 => 'その他',
+        1 => '食べ物のアレルギーについて',
+        2 => '別の人の名前が表示されている',
+        3 => '自分の専用ページのURLが分からなくなってしまった',
+    ];
+    $type = $contactTypeMap[$contactType];
+
+    $name = htmlspecialchars($request->getParam('user-name'));
+    $description = htmlspecialchars($request->getParam('description'));
+    if ($name === '' || mb_strlen($description) > 200) {
+        // TODO きちんとエラー表示
+        return $renderer->render($response->withStatus(500)->withHeader('Content-Type', 'text/html'), '500.html', []);
+    }
+
+    (new \acolish\model\Slack(\acolish\config\CommonConfig::getInstance()->get('slack')))->contactNotify(null, $name, $type, $description);
+
+    return $renderer->render($response, 'contact-result.html', [
+        'token' => (new \acolish\model\Token(\acolish\config\CommonConfig::getInstance()->get('csrf_token_salt')))->generateTokenString(null, time()),
+        'formUrl' => '/wedding/contact',
+        'name' => $name,
+        'type' => $type,
+        'description' => $description,
+        'topUrl' => '/wedding',
+    ]);
+});
+
 $app->get('/wedding/{id}', function(\Slim\Http\Request $request, \Slim\Http\Response $response) {
 	$id = $request->getAttribute('id');
 	$user = (new \acolish\model\User())->getUserById($id);
@@ -44,7 +99,78 @@ $app->get('/wedding/{id}', function(\Slim\Http\Request $request, \Slim\Http\Resp
 	    'name' => $user->getDisplayName(),
         'status' => $user->getStatus(),
         'giftName' => $gift ? $gift->getName() : null,
-        'token' => (new \acolish\model\Token(\acolish\config\CommonConfig::getInstance()->get('csrf_token_salt')))->generateTokenString($id, time())
+        'token' => (new \acolish\model\Token(\acolish\config\CommonConfig::getInstance()->get('csrf_token_salt')))->generateTokenString($id, time()),
+        'id' => $id,
+    ]);
+});
+
+$app->get('/wedding/{id}/contact', function(\Slim\Http\Request $request, \Slim\Http\Response $response) {
+    $id = $request->getAttribute('id');
+    $user = (new \acolish\model\User())->getUserById($id);
+
+    if ($user === null) {
+        throw new \Slim\Exception\NotFoundException($request, $response);
+    }
+
+    /** @var \Slim\Views\PhpRenderer $renderer */
+    $renderer = $this->renderer;
+    return $renderer->render($response, 'contact.html', [
+        'token' => (new \acolish\model\Token(\acolish\config\CommonConfig::getInstance()->get('csrf_token_salt')))->generateTokenString($id, time()),
+        'formUrl' => '/wedding/' . $id . '/contact',
+        'topUrl' => '/wedding/' . $id,
+        'name' => $user->getName(),
+    ]);
+});
+
+$app->post('/wedding/{id}/contact', function(\Slim\Http\Request $request, \Slim\Http\Response $response) {
+    /** @var \Slim\Views\PhpRenderer $renderer */
+    $renderer = $this->renderer;
+
+    $id = $request->getAttribute('id');
+
+    $tokenString = $request->getParam('token');
+
+    $token = (new \acolish\model\Token(\acolish\config\CommonConfig::getInstance()->get('csrf_token_salt')));
+    if (!$token->isValid($id, $tokenString)) {
+        // TODO きちんとエラー表示
+        return $renderer->render($response->withStatus(500)->withHeader('Content-Type', 'text/html'), '500.html', []);
+    }
+
+    $user = (new \acolish\model\User())->getUserById($id);
+
+    if ($user === null) {
+        throw new \Slim\Exception\NotFoundException($request, $response);
+    }
+
+    $contactType = intval($request->getParam('type'));
+    if ($contactType < 0 || 3 < $contactType) {
+        // TODO きちんとエラー表示
+        return $renderer->render($response->withStatus(500)->withHeader('Content-Type', 'text/html'), '500.html', []);
+    }
+    $contactTypeMap = [
+        0 => 'その他',
+        1 => '食べ物のアレルギーについて',
+        2 => '別の人の名前が表示されている',
+        3 => '自分の専用ページのURLが分からなくなってしまった',
+    ];
+    $type = $contactTypeMap[$contactType];
+
+    $name = htmlspecialchars($request->getParam('user-name'));
+    $description = htmlspecialchars($request->getParam('description'));
+    if ($name === '' || mb_strlen($description) > 200) {
+        // TODO きちんとエラー表示
+        return $renderer->render($response->withStatus(500)->withHeader('Content-Type', 'text/html'), '500.html', []);
+    }
+
+    (new \acolish\model\Slack(\acolish\config\CommonConfig::getInstance()->get('slack')))->contactNotify($user, $name, $type, $description);
+
+    return $renderer->render($response, 'contact-result.html', [
+        'token' => (new \acolish\model\Token(\acolish\config\CommonConfig::getInstance()->get('csrf_token_salt')))->generateTokenString(null, time()),
+        'formUrl' => '/wedding/contact',
+        'name' => $name,
+        'type' => $type,
+        'description' => $description,
+        'topUrl' => '/wedding/' . $id,
     ]);
 });
 

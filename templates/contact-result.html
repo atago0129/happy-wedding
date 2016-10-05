@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow">
+    <title>お問い合わせフォーム</title>
+    <link rel="stylesheet" type="text/css" href="/css/wedding.css" />
+</head>
+<body class="main">
+<div class="content">
+    <div>
+        <img class="mainIcon" src="/img/icon/01.png">
+    </div>
+    <div class="invitationMessage">
+        <h1>以下の内容でお問い合わせを受け付けました。</h1>
+        <ul class="contactForm">
+            <li></li>
+            <li>お名前： <?= $name ?></li>
+            <li>お問い合わせ内容： <?= $type ?></li>
+            <li><?= $description ?></li>
+        </ul>
+    </div>
+</div>
+<div class="listFooter">
+    <a href="<?= $topUrl ?>">招待状TOPへ戻る</a>
+</div>
+</body>
+</html>

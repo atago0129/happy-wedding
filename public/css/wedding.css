@@ -240,3 +240,23 @@ h2.modalDescription {
     border: none;
     background: transparent url("/img/icon/loading.gif");
 }
+
+.contactForm {
+    text-align: left;
+}
+
+.contactForm li {
+    margin: 6px 0;
+}
+
+.contactForm li input {
+    border-radius: 6px;
+    padding: 2px;
+}
+
+.contactForm li textarea {
+    width: 96%;
+    height: 150px;
+    border-radius: 12px;
+    padding: 2%;
+}
