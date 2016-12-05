@@ -1,0 +1,263 @@
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    background:transparent;
+}
+
+body {
+    font-family: 游ゴシック体, 'Yu Gothic', YuGothic, 'ヒラギノ角ゴシック Pro', 'Hiragino Kaku Gothic Pro', メイリオ, Meiryo, Osaka, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
+    background-color: #d8d0b2;
+}
+figure {
+    display: block;
+}
+a {
+    text-decoration: none;
+    color: #000000;
+}
+li {
+    list-style: none;
+}
+
+.main {
+    width: 80%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 20px;
+    margin: 0 auto;
+}
+
+.content {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-justify-content: center;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.mainIcon {
+    margin-right: 16px;
+    max-width: 480px;
+    max-height: 606px;
+}
+
+.mapLink {
+    font-size: 80%;
+    text-decoration: underline;
+    color: #0b0fc3;
+}
+
+.invitationMessage {
+    text-align: center;
+    padding: 24px;
+    background-color: #a2c46b;
+    border-radius: 50px;
+    min-width: 600px;
+}
+
+li.big {
+    font-size: 140%;
+}
+
+li.guestName {
+    font-size: 160%;
+}
+
+.rsvp {
+    text-align: center;
+    margin: 20px;
+}
+
+.rsvpButton {
+    font-size: 120%;
+    font-weight: bold;
+    padding: 10px 30px;
+    border-radius: 10px;
+    background-color: #6c8844;
+    color: #fdf4e0;
+    cursor: pointer;
+    border: 0;
+}
+
+.rsvpButton:hover {
+    background-color: #4e6d36;
+}
+
+.rsvpSelector {
+    padding: 30px;
+}
+
+.rsvpSelector li {
+    margin: 50px;
+}
+
+.rsvpPart {
+    font-size: 300%;
+    color: #b2851d;
+    cursor: pointer;
+}
+
+.rsvpPart:hover {
+    color: #96441c;
+    font-weight:bold;
+}
+
+.rsvpNonPart {
+    font-size: 200%;
+    color: #555555;
+    cursor: pointer;
+}
+
+.rsvpNonPart:hover {
+    color: #b7b7b7;
+}
+
+.listHeader {
+    margin-bottom: 30px;
+    padding: 12px;
+    background-color: #6c8844;
+    color: #fdf4e0;
+    border-radius: 10px;
+}
+
+.listFooter {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.listFooter a {
+    color: #5d5c5c;
+}
+
+.listFooter a:hover {
+    color: #000000;
+    font-weight: bold;
+}
+
+.itemList {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -webkit-justify-content: space-around;
+    justify-content: space-around;
+}
+
+.itemList li {
+    padding: 5px;
+}
+
+.itemList li figure {
+    width: 360px;
+}
+
+.itemList li figure img {
+    width: 100%;
+}
+
+.modalSelectButtons {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    flex: 1;
+    -webkit-flex: 1;
+    justify-content: space-around;
+    -webkit-justify-content: space-around;
+}
+
+.modalSelectButtons li {
+    flex-grow: 1;
+    -webkit-flex-grow: 1;
+}
+
+.modalSelectButtons li p {
+    padding-bottom: 8px;
+    cursor: pointer;
+    text-align: center;
+    color: #8c8c8c;
+}
+
+.modalSelectButtons li p:hover {
+    color: #000;
+    font-weight: bold;
+}
+
+.modalTitle {
+    margin: 20px 20px 0 20px;
+}
+
+.modalDescription {
+    margin: 0 20px;
+}
+
+h2.modalDescription {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.modalImage {
+    display: block;
+    margin: 10px auto;
+}
+
+.modal {
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    padding: 0;
+    background-color: #f5f4d1;
+    border: solid 1px #8BC34A;
+    overflow: auto;
+    position: absolute;
+    outline: none;
+}
+
+.loadingModal {
+    width: 88px;
+    height: 88px;
+    border: none;
+    background: transparent url("/img/icon/loading.gif");
+}
+
+.contactForm {
+    text-align: left;
+}
+
+.contactForm li {
+    margin: 6px 0;
+}
+
+.contactForm li input {
+    border-radius: 6px;
+    padding: 2px;
+}
+
+.contactForm li textarea {
+    width: 96%;
+    height: 150px;
+    border-radius: 12px;
+    padding: 2%;
+    min-width: 580px;
+}

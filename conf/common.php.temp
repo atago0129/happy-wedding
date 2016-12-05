@@ -1,0 +1,9 @@
+<?php
+
+return [
+    'csrf_token_salt' => 'SALT',
+    'slack' => [
+        'web_hook_url' => 'http://path/to/slack/web/hook/url',
+        'channel' => 'channel_name',
+    ],
+];

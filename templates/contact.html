@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow">
+    <title>お問い合わせフォーム</title>
+    <link rel="stylesheet" type="text/css" href="/css/wedding.css" />
+</head>
+<body class="main">
+<div class="content">
+    <div>
+        <img class="mainIcon" src="/img/icon/01.png">
+    </div>
+    <div class="invitationMessage">
+        <h1>お問い合わせ</h1>
+        <form method="post" action="<?= $formUrl ?>">
+        <ul class="contactForm">
+            <li>お名前： <input value="<?= $name ?>" type="text" name="user-name"/></li>
+            <li>お問い合わせ内容：<select name="type">
+                <option value=""></option>
+                <option value="1">食べ物のアレルギーについて</option>
+                <option value="2">別の人の名前が表示されている</option>
+                <option value="3">自分の専用ページのURLが分からなくなってしまった</option>
+                <option value="0">その他</option>
+            </select></li>
+            <li><textarea name="description" placeholder="200文字まで"></textarea></li>
+        </ul>
+        <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
+        <input type="submit">
+        </form>
+    </div>
+</div>
+<div class="listFooter">
+    <a href="<?= $topUrl ?>">招待状TOPへ戻る</a>
+</div>
+</body>
+</html>
