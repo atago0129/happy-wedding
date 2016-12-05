@@ -259,4 +259,5 @@ h2.modalDescription {
     height: 150px;
     border-radius: 12px;
     padding: 2%;
+    min-width: 580px;
 }

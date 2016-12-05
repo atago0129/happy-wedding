@@ -202,7 +202,7 @@ class Rsvp extends React.Component {
                     {this.state.userStatus === 1 ? <button className="rsvpButton" onClick={this.openModal.bind(this)}>出欠を変更する（御欠席で回答済み）</button> : null}
                     {(this.state.userStatus === 2 || this.state.userStatus === 10) ? <button className="rsvpButton" onClick={this.openModal.bind(this)}>出欠を変更する（御出席で回答済み）</button> : null}
                 </div>
-                {this.state.userStatus === 2 ?
+                {this.state.userStatus === 2 && parseInt(this.props.giftType) === 0 ?
                     (this.props.giftName === ''  ?
                         <div className="rsvp"><a href={location.href + '/present'}><button className="rsvpButton">お土産を選択する</button></a></div> :
                         <div className="rsvp"><p>お土産： {this.props.giftName}</p></div>
@@ -224,6 +224,7 @@ ReactDom.render(
     <Rsvp
         token={document.getElementById('token').getAttribute('data-token')}
         status={document.getElementById('userStatus').getAttribute('data-user-status')}
+        giftType={document.getElementById('giftType').getAttribute('data-gift-type')}
         giftName={document.getElementById('giftName').getAttribute('data-gift-name')}
     />,
     document.getElementById('container')

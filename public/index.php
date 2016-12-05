@@ -98,6 +98,7 @@ $app->get('/wedding/{id}', function(\Slim\Http\Request $request, \Slim\Http\Resp
 	return $renderer->render($response, 'invitation.html', [
 	    'name' => $user->getDisplayName(),
         'status' => $user->getStatus(),
+        'giftType' => $user->getGiftType(),
         'giftName' => $gift ? $gift->getName() : null,
         'token' => (new \acolish\model\Token(\acolish\config\CommonConfig::getInstance()->get('csrf_token_salt')))->generateTokenString($id, time()),
         'id' => $id,
@@ -222,6 +223,12 @@ $app->get('/wedding/{id}/present', function (\Slim\Http\Request $request, \Slim\
     }
 
     $gifts = (new \acolish\model\Gift())->getGiftsByType($user->getGiftType());
+
+    if (empty($gifts)) {
+        $user->setGiftId('special_gift');
+        (new \acolish\model\User())->decisionGift($user);
+        return $response->withStatus(302)->withHeader('Location', '/wedding/' . $id);
+    }
 
     /** @var \Slim\Views\PhpRenderer $renderer */
     $renderer = $this->renderer;
