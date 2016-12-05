@@ -7,7 +7,7 @@ var source = require('vinyl-source-stream');
 var rename = require('gulp-rename');
 
 gulp.task('list-dev', function() {
-    return browserify('./jsx/list.jsx', {debug: true})
+    return browserify('./jsx/list.jsx', {debug: false})
         .transform(babelify, {presets: ['es2015', 'react']})
         .bundle()
         .on("error", function (err) {
@@ -27,7 +27,7 @@ gulp.task('list-dev', function() {
 });
 
 gulp.task('rsvp-dev', function() {
-    return browserify('./jsx/rsvp.jsx', {debug: true})
+    return browserify('./jsx/rsvp.jsx', {debug: false})
         .transform(babelify, {presets: ['es2015', 'react']})
         .bundle()
         .on("error", function (err) {
@@ -46,4 +46,8 @@ gulp.task('rsvp-dev', function() {
         })
 });
 
-gulp.task("default", ['list-dev', 'rsvp-dev']);
+gulp.task('apply-prod-environment', function() {
+    process.env.NODE_ENV = 'production';
+});
+
+gulp.task("default", ['apply-prod-environment', 'list-dev', 'rsvp-dev']);
