@@ -1,9 +1,10 @@
 <?php
-
+// アプリケーションの基本設定
 return [
-    'csrf_token_salt' => 'SALT',
+    'csrf_token_salt' => 'SALT', // CSRF トークン生成に利用する SALT です。適切な値を設定してください。
     'slack' => [
-        'web_hook_url' => 'http://path/to/slack/web/hook/url',
-        'channel' => 'channel_name',
+        'enabled' => false, // true にすると Slack と連携できます
+        'web_hook_url' => 'http://path/to/slack/web/hook/url', // Slack の web hook API の URL を記載してください
+        'channel' => 'channel_name', // 連携メッセージを投稿するチャンネル名を指定します
     ],
 ];
