@@ -1,7 +1,8 @@
 <?php
+// slim フレームワークの基本設定
 return [
     'settings' => [
-        'displayErrorDetails' => true, // set to false in production
+        'displayErrorDetails' => false, // true を指定することでエラーを表示できます
         'addContentLengthHeader' => false, // Allow the web server to send the content-length header
 
         // Renderer settings

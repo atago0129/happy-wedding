@@ -1,5 +1,5 @@
 <?php
-
+// データベースの接続情報
 return [
 	'host' => 'localhost',
 	'name' => 'name',
